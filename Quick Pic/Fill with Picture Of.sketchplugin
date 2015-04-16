@@ -3,14 +3,13 @@
 // by Nick Stamas @nickstamas
 
 if ([selection count] > 0) {
-  var alert = [NSAlert alertWithMessageText: "Fill with pic of:"
+  var alert = [NSAlert alertWithMessageText: "Set seed (optional)"
                                  defaultButton:"OK"
                                alternateButton:"Cancel"
                                    otherButton:nil
                      informativeTextWithFormat:""];
 
   var input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
-  [input setStringValue:"dog,corgi"];
   [input autorelease];
   [alert setAccessoryView:input];
   var button = [alert runModal];
@@ -24,7 +23,7 @@ if ([selection count] > 0) {
 
     var request = [[NSMutableURLRequest alloc] init];
     [request setHTTPMethod:@"GET"];
-    var queryString = "https://api.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1&tags=" + tag;
+    var queryString = "http://api.randomuser.me/?seed=" + tag;
     [request setURL:[NSURL URLWithString:queryString]];
 
     var error = [[NSError alloc] init];
@@ -40,10 +39,11 @@ if ([selection count] > 0) {
 
     var data = JSON.parse(validJSONString);
 
-    if (data.items.length > 0) {
+    if (data.results.length > 0) {
       for (var i=0; i <= [selection length]; i++) {
-        var randomIndex = Math.floor(Math.random()*(data.items.length-1))
-        var imageURLString = data.items[randomIndex].media.m;
+        var imageURLString = data.results[0].user.picture.large;
+        
+        [doc showMessage: imageURLString];
         var url = [[NSURL alloc] initWithString: imageURLString];
 
         var newImage = [[NSImage alloc] initByReferencingURL:url];
@@ -55,7 +55,8 @@ if ([selection count] > 0) {
 
         var coll = layer.style().fills().firstObject().documentData().images();              
 
-        [fill setPatternImage: newImage collection:coll];
+        layer.style().fills().firstObject().setPatternImage( newImage );         
+        layer.style().fills().firstObject().setPatternFillType(1);
       }
     } else {
       var message = "No images found tagged with: " + tag;
