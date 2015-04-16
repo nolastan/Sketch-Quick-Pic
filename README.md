@@ -1,6 +1,6 @@
-Sketch-Quick-Pic
+Sketch-Quick-Pic (fork)
 ================
 
-Fill an image layer with an image from Flickr with tags
+Use [randomuser.me](https://randomuser.me) API to randomly generate images in Sketch.
 
-Demo: http://cl.ly/2p2F013l3E3I
+The layer name acts as the seed to keep your personas consistent. Rename your layer to get different images.
